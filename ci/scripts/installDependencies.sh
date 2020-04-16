@@ -1,0 +1,1 @@
+apk add --no-cache nodejs nodejs-npm bash chromium nss chromium-chromedriver git && apk upgrade --no-cache --available
