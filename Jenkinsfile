@@ -12,7 +12,7 @@ pipeline {
         stage('Launch CI Environment') {
             steps {
 				sh 'chmod +x ./ci/scripts/*.sh'
-                sh './ci/scripts/startCurrencyCIEnv.sh'
+               sh './ci/scripts/startCurrencyCIEnv.sh'
             }
         }
         stage('Build Test Suite') {
@@ -28,7 +28,7 @@ pipeline {
         }
         stage('Tear Down CI') {
             steps {
-                input message: 'Finished using the CI? (Click "Proceed" to continue)' 
+                // input message: 'Finished using the CI? (Click "Proceed" to continue)' 
                 sh './ci/scripts/stopCurrencyCIEnv.sh'
             }
         }
