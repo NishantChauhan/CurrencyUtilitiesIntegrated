@@ -1,35 +1,34 @@
 pipeline {
     agent {
         docker {
-            image 'node:10-alpine'
+            image 'nishantchouhan/currency-utilities-integrated-build'
             args '--user root --network host -v /var/run/docker.sock:/var/run/docker.sock'
         }
     }
-    options {
-        skipStagesAfterUnstable()
-    }
     stages {
-        stage('Launch CI Environment') {
+        stage('Initiate CI environment') {
             steps {
-				sh 'chmod +x ./ci/scripts/*.sh'
-               sh './ci/scripts/startCurrencyCIEnv.sh'
-            }
-        }
-        stage('Build Test Suite') {
-            steps {
-                sh './ci/scripts/installDependencies.sh'
-                sh './ci/scripts/buildTestSuite.sh'
+                sh 'chmod +x ./ci/scripts/*.sh'
+                sh './ci/scripts/startDockerCompose.sh'
             }
         }
         stage('Test E2E') {
             steps {
-                sh './ci/scripts/startE2ETest.sh'
+                sh './ci/scripts/executeE2ETest.sh'
             }
         }
-        stage('Tear Down CI') {
+        stage('Wait for Manual Test') {
+            options {
+                timeout(time: 30, unit: 'SECONDS') 
+            }
             steps {
+                echo 'enable the input message to wait for manual test'  
                 // input message: 'Finished using the CI? (Click "Proceed" to continue)' 
-                sh './ci/scripts/stopCurrencyCIEnv.sh'
+            }
+        }
+        stage('Tear Down CI environment') {
+            steps {
+                sh './ci/scripts/stopDockerCompose.sh'
             }
         }
     }
